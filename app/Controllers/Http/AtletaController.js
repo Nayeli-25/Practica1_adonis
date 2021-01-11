@@ -8,7 +8,8 @@ const Atleta = use('App/Models/Atleta')
 const rules = {
   Nombre: 'required',
   Apellido: 'required',
-  Deporte: 'required'
+  Deporte: 'required',
+  Edad: 'integer'
 }
 
 class AtletaController {
@@ -16,7 +17,7 @@ class AtletaController {
     async createAtleta ({request, response}) {
       const validation = await validate(request.all(), rules)
           if (validation.fails()) 
-            return response.status(400).send ('Datos faltantes, no se realizó el registro')
+            return response.status(400).send ({Error: 'Datos faltantes, no se realizó el registro', Causa: validation.messages()})
       
           const info = request.body
           const atleta = await Atleta.create(info)
@@ -37,7 +38,7 @@ class AtletaController {
       const validation = await validate(request.all(), rules)
         
       if (validation.fails()) 
-            return response.status(400).send ('Datos faltantes, no se actualizó la información')
+            return response.status(400).send ({Error: 'Datos faltantes, no se actualizó la información', Causa: validation.messages()})
 
       atleta.Nombre = request.input('Nombre')
       atleta.Apellido = request.input('Apellido')
